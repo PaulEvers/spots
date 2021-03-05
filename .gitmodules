@@ -1,3 +1,6 @@
 [submodule "spots-gateway"]
 	path = spots-gateway
 	url = https://github.com/PaulEvers/spots-gateway.git
+[submodule "spots-spotservice"]
+	path = spots-spotservice
+	url = https://github.com/PaulEvers/spots-spotservice.git
