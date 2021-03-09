@@ -4,3 +4,6 @@
 [submodule "spots-spotservice"]
 	path = spots-spotservice
 	url = https://github.com/PaulEvers/spots-spotservice.git
+[submodule "spots-flutter"]
+	path = spots-flutter
+	url = https://github.com/PaulEvers/spots-flutter.git
