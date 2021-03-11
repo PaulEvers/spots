@@ -7,3 +7,6 @@
 [submodule "spots-flutter"]
 	path = spots-flutter
 	url = https://github.com/PaulEvers/spots-flutter.git
+[submodule "spots-eureka"]
+	path = spots-eureka
+	url = https://github.com/PaulEvers/spots-eureka.git
