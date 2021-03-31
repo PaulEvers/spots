@@ -10,6 +10,3 @@
 [submodule "spots-eureka"]
 	path = spots-eureka
 	url = https://github.com/PaulEvers/spots-eureka.git
-[submodule "spots-ionic"]
-	path = spots-ionic
-	url = https://github.com/PaulEvers/spots-ionic.git
