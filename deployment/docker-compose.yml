@@ -1,12 +1,40 @@
 version: '3.3'
 services:
-  message-broker:
-    image: rabbitmq:3.8-management
-    hostname: message-broker
-    restart: always
+  # message-broker:
+  #   image: rabbitmq:3.8-management
+  #   hostname: message-broker
+  #   restart: always
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    hostname: mongo
+    restart: unless-stopped
+    networks: 
+      - spots-network
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "27017:27017"
+
+  spots-eureka:
+    image: 'spots-eureka:0.0.1-SNAPSHOT'
+    hostname: spots-eureka
+    networks: 
+      - spots-network
+    ports:
+        - "8761:8761"
+
+  spots-gateway:
+    image:  'spots-gateway:0.0.1-SNAPSHOT'
+    ports:
+        - "8080:8080"
+    links:
+        - "spots-eureka"
+    networks: 
+      - spots-network
+    environment:
+      eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
 
   spotservice:
     image: 'spotservice:0.0.1-SNAPSHOT'
@@ -14,19 +42,12 @@ services:
     build:
       context: .
     container_name: spotservice
-    depends_on:
-      - db
+    networks: 
+      - spots-network
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
-      - SPRING_DATASOURCE_USERNAME=compose-postgres
-      - SPRING_DATASOURCE_PASSWORD=compose-postgres
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    ports:
-      - 8080:8080
+      eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
 
-  db:
-    image: 'postgres:13.1-alpine'
-    container_name: db
-    environment:
-      - POSTGRES_USER=compose-postgres
-      - POSTGRES_PASSWORD=compose-postgres
+
+networks:
+  spots-network:
+    driver: bridge
