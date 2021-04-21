@@ -8,7 +8,7 @@ services:
   #     - "5672:5672"
   #     - "15672:15672"
   mongo:
-    image: mongo:4.4
+    image: mongo:4.4.5
     container_name: mongo
     hostname: mongo
     restart: unless-stopped
@@ -16,9 +16,12 @@ services:
       - spots-network
     ports:
       - "27017:27017"
+    volumes:
+      - mongodb:/data/db
 
   spots-eureka:
     image: 'spots-eureka:0.0.1-SNAPSHOT'
+    container_name: spots-eureka
     hostname: spots-eureka
     networks: 
       - spots-network
@@ -27,6 +30,7 @@ services:
 
   spots-gateway:
     image:  'spots-gateway:0.0.1-SNAPSHOT'
+    container_name: spots-gateway
     ports:
         - "8080:8080"
     links:
@@ -38,15 +42,17 @@ services:
 
   spotservice:
     image: 'spotservice:0.0.1-SNAPSHOT'
+    container_name: spotservice
     hostname: spotservice
     build:
       context: .
-    container_name: spotservice
     networks: 
       - spots-network
     environment:
       eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
 
+volumes:
+  mongodb:
 
 networks:
   spots-network:
