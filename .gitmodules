@@ -13,3 +13,6 @@
 [submodule "spots-ionic"]
 	path = spots-ionic
 	url = https://github.com/PaulEvers/spots-ionic.git
+[submodule "spots-userservice"]
+	path = spots-userservice
+	url = https://github.com/PaulEvers/spots-userservice.git
