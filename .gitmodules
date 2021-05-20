@@ -16,3 +16,6 @@
 [submodule "spots-userservice"]
 	path = spots-userservice
 	url = https://github.com/PaulEvers/spots-userservice.git
+[submodule "spots-angular"]
+	path = spots-angular
+	url = https://github.com/PaulEvers/spots-angular.git
