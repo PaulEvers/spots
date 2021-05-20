@@ -8,6 +8,22 @@ scrape_configs:
 
   - job_name: 'spots-gateway'
     metrics_path: '/actuator/prometheus'
-    scheme: https
+    # scheme: https
     static_configs:
-      - targets: ['spots-gateway:443']
+      - targets: ['spots-gateway:8080']
+
+  - job_name: 'spots-eureka'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['spots-eureka:8761']
+  
+  - job_name: 'spots-spotservice'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['spots-spotservice:8081']
+
+  - job_name: 'spots-userservice'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['spots-userservice:8082']
+

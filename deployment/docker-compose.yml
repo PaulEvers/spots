@@ -17,28 +17,28 @@ services:
   #     - 3000:3000
   #   user: "104"
 
-  # rabbitmq:
-  #   container_name: rabbitmq
-  #   image: rabbitmq:3.8-management
-  #   hostname: rabbitmq
-  #   restart: always
-  #   networks: 
-  #     - spots-network
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8-management
+    hostname: rabbitmq
+    restart: always
+    networks: 
+      - spots-network
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
-  # mongo:
-  #   image: mongo:4.4.5
-  #   container_name: mongo
-  #   hostname: mongo
-  #   restart: unless-stopped
-  #   networks: 
-  #     - spots-network
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongodb:/data/db
+  mongo:
+    image: mongo:4.4.5
+    container_name: mongo
+    hostname: mongo
+    restart: unless-stopped
+    networks: 
+      - spots-network
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
 
   spots-eureka:
     image: 'spotsregistry1.azurecr.io/spots-eureka:latest'
@@ -46,26 +46,28 @@ services:
     hostname: spots-eureka
     networks: 
       - spots-network
-    ports:
-        - "8761:8761"
+    expose:
+      - "8761"
 
-  # spots-userservice:
-  #   image: 'spotsregistry1.azurecr.io/spots-userservice:latest'
-  #   container_name: spots-userservice
-  #   hostname: spots-userservice
-  #   networks: 
-  #     - spots-network
-  #   environment:
-  #     eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
-  #     server_port: 0
-  #     spring_data_mongodb_host: mongo
-  #     spring_rabbitmq_host: rabbitmq
+  spots-userservice:
+    image: 'spotsregistry1.azurecr.io/spots-userservice:latest'
+    container_name: spots-userservice
+    hostname: spots-userservice
+    networks: 
+      - spots-network
+    environment:
+      eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
+      server_port: 8082
+      spring_data_mongodb_host: mongo
+      spring_rabbitmq_host: rabbitmq
+    expose:
+      - "8082"
 
   spots-gateway:
     image:  'spotsregistry1.azurecr.io/spots-gateway:latest'
     container_name: spots-gateway
     ports:
-        - "443:443"
+        - "8080:8080"
     links:
         - "spots-eureka"
     networks: 
@@ -73,17 +75,19 @@ services:
     environment:
       eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
 
-  # spotservice:
-  #   image: 'spotsregistry1.azurecr.io/spots-spotservice:latest'
-  #   container_name: spots-spotservice
-  #   hostname: spots-spotservice
-  #   networks: 
-  #     - spots-network
-  #   environment:
-  #     eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
-  #     server_port: 0
-  #     spring_data_mongodb_host: mongo
-  #     spring_rabbitmq_host: rabbitmq
+  spotservice:
+    image: 'spotsregistry1.azurecr.io/spots-spotservice:latest'
+    container_name: spots-spotservice
+    hostname: spots-spotservice
+    networks: 
+      - spots-network
+    environment:
+      eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
+      server_port: 8081
+      spring_data_mongodb_host: mongo
+      spring_rabbitmq_host: rabbitmq
+    expose:
+      - "8081"
 
 volumes:
   mongodb:
