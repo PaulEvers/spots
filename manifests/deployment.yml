@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: pauleversspots 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pauleversspots
+  template:
+    metadata:
+      labels:
+        app: pauleversspots 
+    spec:
+      containers:
+        - name: pauleversspots 
+          image: spotsregistry1.azurecr.io/pauleversspots
+          ports:
+          - containerPort: 80
