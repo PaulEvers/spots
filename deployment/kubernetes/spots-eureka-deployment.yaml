@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+      convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: spots-eureka
+  name: spots-eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: spots-eureka
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+          convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/spots-network: "true"
+        io.kompose.service: spots-eureka
+    spec:
+      containers:
+      - image: spotsregistry1.azurecr.io/spots-eureka:latest
+        imagePullPolicy: ""
+        name: spots-eureka
+        ports:
+        - containerPort: 8761
+        resources: {}
+      hostname: spots-eureka
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

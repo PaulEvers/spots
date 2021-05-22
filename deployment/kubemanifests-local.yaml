@@ -1,0 +1,568 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: mongo
+    name: mongo
+  spec:
+    ports:
+    - name: "27017"
+      port: 27017
+      targetPort: 27017
+    selector:
+      io.kompose.service: mongo
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: prometheus
+    name: prometheus
+  spec:
+    ports:
+    - name: "9090"
+      port: 9090
+      targetPort: 9090
+    selector:
+      io.kompose.service: prometheus
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: rabbitmq
+    name: rabbitmq
+  spec:
+    ports:
+    - name: "5672"
+      port: 5672
+      targetPort: 5672
+    - name: "15672"
+      port: 15672
+      targetPort: 15672
+    selector:
+      io.kompose.service: rabbitmq
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-eureka
+    name: spots-eureka
+  spec:
+    ports:
+    - name: "8761"
+      port: 8761
+      targetPort: 8761
+    selector:
+      io.kompose.service: spots-eureka
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-gateway
+    name: spots-gateway
+  spec:
+    type: LoadBalancer
+    ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    selector:
+      io.kompose.service: spots-gateway
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-userservice
+    name: spots-userservice
+  spec:
+    ports:
+    - name: "8082"
+      port: 8082
+      targetPort: 8082
+    selector:
+      io.kompose.service: spots-userservice
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-spotservice
+    name: spots-spotservice
+  spec:
+    ports:
+    - name: "8081"
+      port: 8081
+      targetPort: 8081
+    selector:
+      io.kompose.service: spots-spotservice
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: mongo
+    name: mongo
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: mongo
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: mongo
+      spec:
+        containers:
+        - image: mongo:4.4.5
+          imagePullPolicy: ""
+          name: mongo
+          ports:
+          - containerPort: 27017
+          resources: {}
+          volumeMounts:
+          - mountPath: /data/db
+            name: mongodb
+        hostname: mongo
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes:
+        - name: mongodb
+          persistentVolumeClaim:
+            claimName: mongodb
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: mongodb
+    name: mongodb
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: prometheus
+    name: prometheus
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: prometheus
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: prometheus
+      spec:
+        containers:
+        - image: prom/prometheus
+          imagePullPolicy: ""
+          name: prometheus
+          ports:
+          - containerPort: 9090
+          resources: {}
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: rabbitmq
+    name: rabbitmq
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: rabbitmq
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: rabbitmq
+      spec:
+        containers:
+        - image: rabbitmq:3.8-management
+          imagePullPolicy: ""
+          name: rabbitmq
+          ports:
+          - containerPort: 5672
+          - containerPort: 15672
+          resources: {}
+        hostname: rabbitmq
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-eureka
+    name: spots-eureka
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: spots-eureka
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: spots-eureka
+      spec:
+        containers:
+        - image: spotsregistry1.azurecr.io/spots-eureka:latest
+          imagePullPolicy: Never
+          name: spots-eureka
+          ports:
+          - containerPort: 8761
+          resources: {}
+        hostname: spots-eureka
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-gateway
+    name: spots-gateway
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: spots-gateway
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: spots-gateway
+      spec:
+        containers:
+        - env:
+          - name: eureka_client_serviceUrl_defaultZone
+            value: http://spots-eureka:8761/eureka
+          image: spotsregistry1.azurecr.io/spots-gateway:latest
+          imagePullPolicy: Never
+          name: spots-gateway
+          ports:
+          - containerPort: 8080
+          resources: {}
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-userservice
+    name: spots-userservice
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: spots-userservice
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: spots-userservice
+      spec:
+        containers:
+        - env:
+          - name: eureka_client_serviceUrl_defaultZone
+            value: http://spots-eureka:8761/eureka
+          - name: server_port
+            value: "8082"
+          - name: spring_data_mongodb_host
+            value: mongo
+          - name: spring_rabbitmq_host
+            value: rabbitmq
+          image: spotsregistry1.azurecr.io/spots-userservice:latest
+          imagePullPolicy: Never
+          name: spots-userservice
+          ports:
+          - containerPort: 8082
+          resources: {}
+        hostname: spots-userservice
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+        convert -f docker-compose.yml -o kubemanifests.yaml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: spots-spotservice
+    name: spots-spotservice
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: spots-spotservice
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+            convert -f docker-compose.yml -o kubemanifests.yaml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/spots-network: "true"
+          io.kompose.service: spots-spotservice
+      spec:
+        containers:
+        - env:
+          - name: eureka_client_serviceUrl_defaultZone
+            value: http://spots-eureka:8761/eureka
+          - name: server_port
+            value: "8081"
+          - name: spring_data_mongodb_host
+            value: mongo
+          - name: spring_rabbitmq_host
+            value: rabbitmq
+          image: spotsregistry1.azurecr.io/spots-spotservice:latest
+          imagePullPolicy: Never
+          name: spots-spotservice
+          ports:
+          - containerPort: 8081
+          resources: {}
+        hostname: spots-spotservice
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: spots-network
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/spots-network: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/spots-network: "true"
+kind: List
+metadata: {}
+

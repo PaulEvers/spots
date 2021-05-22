@@ -10,12 +10,12 @@ services:
     volumes:
      - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
-  # grafana:
-  #   container_name: grafana
-  #   image: grafana/grafana
-  #   ports:
-  #     - 3000:3000
-  #   user: "104"
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    user: "104"
 
   rabbitmq:
     container_name: rabbitmq
@@ -30,9 +30,9 @@ services:
 
   mongo:
     image: mongo:4.4.5
-    container_name: mongo
+    container_name: mongo 
     hostname: mongo
-    restart: unless-stopped
+    restart: always
     networks: 
       - spots-network
     ports:
@@ -75,7 +75,7 @@ services:
     environment:
       eureka_client_serviceUrl_defaultZone: http://spots-eureka:8761/eureka
 
-  spotservice:
+  spots-spotservice:
     image: 'spotsregistry1.azurecr.io/spots-spotservice:latest'
     container_name: spots-spotservice
     hostname: spots-spotservice
