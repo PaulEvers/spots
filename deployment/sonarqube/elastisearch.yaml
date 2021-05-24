@@ -1,0 +1,16 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Deployment
+metadata:
+  name: quickstart
+spec:
+  version: 7.12.1
+  nodeSets:
+  - name: default
+    count: 3
+    podTemplate:
+      spec:
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
